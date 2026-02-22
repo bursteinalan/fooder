@@ -67,7 +67,8 @@ async function startServer() {
     app.use(express.static(frontendPath));
 
     // Serve index.html for all other routes (SPA support)
-    app.get('*', (req, res) => {
+    // Use a wildcard that works with Express 5
+    app.get('/*', (req, res) => {
       const indexPath = path.join(frontendPath, 'index.html');
       if (require('fs').existsSync(indexPath)) {
         res.sendFile(indexPath);
