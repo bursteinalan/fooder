@@ -27,11 +27,11 @@ async function startServer() {
   try {
     // Initialize storage (Firestore or file-based)
     const storageService = createStorageService();
-    
+
     // Run migration only for file-based storage
     if (storageService instanceof StorageService) {
       const migrationService = new MigrationService(storageService);
-      
+
       if (migrationService.needsMigration()) {
         console.log('Migration needed. Running migration...');
         await migrationService.migrate();
@@ -63,7 +63,7 @@ async function startServer() {
     const frontendPath = path.join(__dirname, '../../frontend/dist');
     console.log('Frontend path:', frontendPath);
     console.log('Frontend path exists:', require('fs').existsSync(frontendPath));
-    
+
     app.use(express.static(frontendPath));
 
     // Serve index.html for all other routes (SPA support)

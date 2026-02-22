@@ -16,7 +16,7 @@ RUN cd frontend && npm ci
 COPY backend ./backend
 COPY frontend ./frontend
 
-# Build frontend
+# Build frontend (will use empty VITE_API_BASE_URL since .env is ignored)
 RUN cd frontend && npm run build
 
 # Build backend

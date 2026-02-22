@@ -6,6 +6,12 @@ npm-debug.log
 README.md
 .env
 .env.local
+.env.production
+.env.development
+frontend/.env
+frontend/.env.local
+backend/.env
+backend/.env.local
 backend/dist
 frontend/dist
 backend/data
