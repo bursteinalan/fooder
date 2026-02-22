@@ -8,7 +8,7 @@ export function createGroceryListRouter(groceryListService: GroceryListService):
   /**
    * POST /api/grocery-list - Generate consolidated grocery list from recipe IDs
    */
-  router.post('/', (req: AuthRequest, res: Response) => {
+  router.post('/', async (req: AuthRequest, res: Response) => {
     try {
       const userId = req.userId!;
       const { recipeIds } = req.body;
@@ -31,7 +31,7 @@ export function createGroceryListRouter(groceryListService: GroceryListService):
       }
 
       // Generate consolidated grocery list
-      const items = groceryListService.generateGroceryList(userId, recipeIds);
+      const items = await groceryListService.generateGroceryList(userId, recipeIds);
 
       res.json({ items });
     } catch (error) {
@@ -45,10 +45,10 @@ export function createGroceryListRouter(groceryListService: GroceryListService):
   /**
    * GET /api/grocery-list/uncategorized - Get all uncategorized ingredients
    */
-  router.get('/uncategorized', (req: AuthRequest, res: Response) => {
+  router.get('/uncategorized', async (req: AuthRequest, res: Response) => {
     try {
       const userId = req.userId!;
-      const uncategorized = groceryListService.getUncategorizedIngredients(userId);
+      const uncategorized = await groceryListService.getUncategorizedIngredients(userId);
       res.json({ ingredients: uncategorized, count: uncategorized.length });
     } catch (error) {
       res.status(500).json({ 
@@ -76,7 +76,7 @@ export function createGroceryListRouter(groceryListService: GroceryListService):
   /**
    * PUT /api/grocery-list/categorize - Update ingredient category
    */
-  router.put('/categorize', (req: AuthRequest, res: Response) => {
+  router.put('/categorize', async (req: AuthRequest, res: Response) => {
     try {
       const userId = req.userId!;
       const { ingredientName, category } = req.body;
@@ -91,7 +91,7 @@ export function createGroceryListRouter(groceryListService: GroceryListService):
         return;
       }
 
-      groceryListService.updateIngredientCategory(userId, ingredientName, category);
+      await groceryListService.updateIngredientCategory(userId, ingredientName, category);
       res.json({ success: true, message: 'Category updated successfully' });
     } catch (error) {
       res.status(400).json({ 
@@ -104,11 +104,11 @@ export function createGroceryListRouter(groceryListService: GroceryListService):
   /**
    * GET /api/grocery-list/category/:ingredientName - Get category for ingredient
    */
-  router.get('/category/:ingredientName', (req: AuthRequest, res: Response) => {
+  router.get('/category/:ingredientName', async (req: AuthRequest, res: Response) => {
     try {
       const userId = req.userId!;
       const ingredientName = req.params.ingredientName as string;
-      const category = groceryListService.getIngredientCategory(userId, ingredientName);
+      const category = await groceryListService.getIngredientCategory(userId, ingredientName);
       res.json({ ingredientName, category });
     } catch (error) {
       res.status(500).json({ 

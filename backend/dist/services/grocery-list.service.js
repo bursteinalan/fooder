@@ -1,127 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GroceryListService = exports.AVAILABLE_CATEGORIES = void 0;
-// Ingredient categories for grocery list organization
-const INGREDIENT_CATEGORIES = {
-    // Produce
-    'onion': 'Produce',
-    'garlic': 'Produce',
-    'ginger': 'Produce',
-    'carrot': 'Produce',
-    'carrots': 'Produce',
-    'celery': 'Produce',
-    'potato': 'Produce',
-    'potatoes': 'Produce',
-    'tomato': 'Produce',
-    'tomatoes': 'Produce',
-    'lettuce': 'Produce',
-    'spinach': 'Produce',
-    'kale': 'Produce',
-    'broccoli': 'Produce',
-    'cauliflower': 'Produce',
-    'bell pepper': 'Produce',
-    'pepper': 'Produce',
-    'cucumber': 'Produce',
-    'zucchini': 'Produce',
-    'mushroom': 'Produce',
-    'mushrooms': 'Produce',
-    'apple': 'Produce',
-    'banana': 'Produce',
-    'lemon': 'Produce',
-    'lime': 'Produce',
-    'orange': 'Produce',
-    'avocado': 'Produce',
-    'cilantro': 'Produce',
-    'parsley': 'Produce',
-    'basil': 'Produce',
-    'thyme': 'Produce',
-    'rosemary': 'Produce',
-    // Meat & Seafood
-    'chicken': 'Meat & Seafood',
-    'beef': 'Meat & Seafood',
-    'pork': 'Meat & Seafood',
-    'turkey': 'Meat & Seafood',
-    'lamb': 'Meat & Seafood',
-    'fish': 'Meat & Seafood',
-    'salmon': 'Meat & Seafood',
-    'tuna': 'Meat & Seafood',
-    'shrimp': 'Meat & Seafood',
-    'ground beef': 'Meat & Seafood',
-    'ground turkey': 'Meat & Seafood',
-    'bacon': 'Meat & Seafood',
-    'sausage': 'Meat & Seafood',
-    // Dairy & Eggs
-    'milk': 'Dairy & Eggs',
-    'butter': 'Dairy & Eggs',
-    'cheese': 'Dairy & Eggs',
-    'cream': 'Dairy & Eggs',
-    'yogurt': 'Dairy & Eggs',
-    'sour cream': 'Dairy & Eggs',
-    'egg': 'Dairy & Eggs',
-    'eggs': 'Dairy & Eggs',
-    'cream cheese': 'Dairy & Eggs',
-    'parmesan': 'Dairy & Eggs',
-    'mozzarella': 'Dairy & Eggs',
-    'cheddar': 'Dairy & Eggs',
-    // Pantry & Dry Goods
-    'flour': 'Pantry & Dry Goods',
-    'sugar': 'Pantry & Dry Goods',
-    'salt': 'Pantry & Dry Goods',
-    'black pepper': 'Spices & Seasonings',
-    'rice': 'Pantry & Dry Goods',
-    'pasta': 'Pantry & Dry Goods',
-    'bread': 'Pantry & Dry Goods',
-    'oil': 'Pantry & Dry Goods',
-    'olive oil': 'Pantry & Dry Goods',
-    'vegetable oil': 'Pantry & Dry Goods',
-    'coconut oil': 'Pantry & Dry Goods',
-    'vinegar': 'Pantry & Dry Goods',
-    'soy sauce': 'Pantry & Dry Goods',
-    'honey': 'Pantry & Dry Goods',
-    'maple syrup': 'Pantry & Dry Goods',
-    'beans': 'Pantry & Dry Goods',
-    'lentils': 'Pantry & Dry Goods',
-    'chickpeas': 'Pantry & Dry Goods',
-    'oats': 'Pantry & Dry Goods',
-    'quinoa': 'Pantry & Dry Goods',
-    'cornstarch': 'Pantry & Dry Goods',
-    'baking powder': 'Pantry & Dry Goods',
-    'baking soda': 'Pantry & Dry Goods',
-    'vanilla': 'Pantry & Dry Goods',
-    'vanilla extract': 'Pantry & Dry Goods',
-    'chocolate chips': 'Pantry & Dry Goods',
-    'nuts': 'Pantry & Dry Goods',
-    'almonds': 'Pantry & Dry Goods',
-    'walnuts': 'Pantry & Dry Goods',
-    // Spices & Seasonings
-    'cumin': 'Spices & Seasonings',
-    'paprika': 'Spices & Seasonings',
-    'chili powder': 'Spices & Seasonings',
-    'cayenne': 'Spices & Seasonings',
-    'turmeric': 'Spices & Seasonings',
-    'cinnamon': 'Spices & Seasonings',
-    'nutmeg': 'Spices & Seasonings',
-    'oregano': 'Spices & Seasonings',
-    'bay leaf': 'Spices & Seasonings',
-    'bay leaves': 'Spices & Seasonings',
-    'red pepper': 'Spices & Seasonings',
-    'crushed red pepper': 'Spices & Seasonings',
-    'garlic powder': 'Spices & Seasonings',
-    'onion powder': 'Spices & Seasonings',
-    // Canned & Jarred
-    'tomato sauce': 'Canned & Jarred',
-    'crushed tomatoes': 'Canned & Jarred',
-    'diced tomatoes': 'Canned & Jarred',
-    'tomato paste': 'Canned & Jarred',
-    'coconut milk': 'Canned & Jarred',
-    'chicken broth': 'Canned & Jarred',
-    'beef broth': 'Canned & Jarred',
-    'vegetable broth': 'Canned & Jarred',
-    'stock': 'Canned & Jarred',
-    'broth': 'Canned & Jarred',
-};
-// Custom user-defined categories (persisted)
-let CUSTOM_CATEGORIES = {};
 // Available category options
 exports.AVAILABLE_CATEGORIES = [
     'Produce',
@@ -135,38 +14,48 @@ exports.AVAILABLE_CATEGORIES = [
     'Beverages',
     'Other'
 ];
-function categorizeIngredient(ingredientName) {
-    const normalized = ingredientName.toLowerCase().trim();
-    // Check custom categories first
-    if (CUSTOM_CATEGORIES[normalized]) {
-        return CUSTOM_CATEGORIES[normalized];
-    }
-    // Check for exact match in default categories
-    if (INGREDIENT_CATEGORIES[normalized]) {
-        return INGREDIENT_CATEGORIES[normalized];
-    }
-    // Check if ingredient name contains any category keyword
-    for (const [keyword, category] of Object.entries(INGREDIENT_CATEGORIES)) {
-        if (normalized.includes(keyword)) {
-            return category;
-        }
-    }
-    // Default category
-    return 'Other';
-}
 class GroceryListService {
-    constructor(recipeService) {
+    constructor(recipeService, storageService) {
         this.recipeService = recipeService;
+        this.storageService = storageService;
+    }
+    /**
+     * Categorize an ingredient using user-specific categories
+     */
+    async categorizeIngredient(userId, ingredientName) {
+        const normalized = ingredientName.toLowerCase().trim();
+        // Get user's custom categories
+        const user = 'getUserAsync' in this.storageService
+            ? await this.storageService.getUserAsync(userId)
+            : this.storageService.getUser(userId);
+        if (user && user.customCategories && user.customCategories[normalized]) {
+            return user.customCategories[normalized];
+        }
+        // Fall back to common categories
+        const commonCategories = 'getCommonCategoriesAsync' in this.storageService
+            ? await this.storageService.getCommonCategoriesAsync()
+            : this.storageService.getCommonCategories();
+        if (commonCategories[normalized]) {
+            return commonCategories[normalized];
+        }
+        // Check if ingredient name contains any category keyword in common categories
+        for (const [keyword, category] of Object.entries(commonCategories)) {
+            if (normalized.includes(keyword)) {
+                return category;
+            }
+        }
+        // Default category
+        return 'Other';
     }
     /**
      * Generate a consolidated grocery list from multiple recipe IDs
      * Combines ingredients with matching names and units, and categorizes them
      */
-    generateGroceryList(recipeIds) {
+    async generateGroceryList(userId, recipeIds) {
         const ingredientMap = new Map();
         // Iterate through each recipe
         for (const recipeId of recipeIds) {
-            const recipe = this.recipeService.read(recipeId);
+            const recipe = await this.recipeService.read(userId, recipeId);
             if (!recipe) {
                 continue; // Skip invalid recipe IDs
             }
@@ -187,7 +76,7 @@ class GroceryListService {
                         name: normalizedName,
                         quantity: ingredient.quantity,
                         unit: normalizedUnit,
-                        category: categorizeIngredient(normalizedName),
+                        category: await this.categorizeIngredient(userId, normalizedName),
                     });
                 }
             }
@@ -205,28 +94,46 @@ class GroceryListService {
     /**
      * Get all unique ingredient names that are categorized as "Other"
      */
-    getUncategorizedIngredients() {
-        const recipes = this.recipeService.list();
+    async getUncategorizedIngredients(userId) {
+        const recipes = await this.recipeService.list(userId);
         const uncategorized = new Set();
-        recipes.forEach(recipe => {
-            recipe.ingredients.forEach(ingredient => {
+        for (const recipe of recipes) {
+            for (const ingredient of recipe.ingredients) {
                 const normalized = ingredient.name.toLowerCase().trim();
-                if (categorizeIngredient(normalized) === 'Other') {
+                const category = await this.categorizeIngredient(userId, normalized);
+                if (category === 'Other') {
                     uncategorized.add(normalized);
                 }
-            });
-        });
+            }
+        }
         return Array.from(uncategorized).sort();
     }
     /**
      * Update the category for a specific ingredient
      */
-    updateIngredientCategory(ingredientName, category) {
+    async updateIngredientCategory(userId, ingredientName, category) {
         const normalized = ingredientName.toLowerCase().trim();
         if (!exports.AVAILABLE_CATEGORIES.includes(category)) {
             throw new Error(`Invalid category: ${category}`);
         }
-        CUSTOM_CATEGORIES[normalized] = category;
+        // Get user and update their custom categories
+        const user = 'getUserAsync' in this.storageService
+            ? await this.storageService.getUserAsync(userId)
+            : this.storageService.getUser(userId);
+        if (!user) {
+            throw new Error(`User not found: ${userId}`);
+        }
+        // Initialize customCategories if it doesn't exist
+        if (!user.customCategories) {
+            user.customCategories = {};
+        }
+        user.customCategories[normalized] = category;
+        if ('setUserAsync' in this.storageService) {
+            await this.storageService.setUserAsync(userId, user);
+        }
+        else {
+            this.storageService.setUser(userId, user);
+        }
     }
     /**
      * Get all available categories
@@ -237,8 +144,8 @@ class GroceryListService {
     /**
      * Get the category for a specific ingredient
      */
-    getIngredientCategory(ingredientName) {
-        return categorizeIngredient(ingredientName);
+    async getIngredientCategory(userId, ingredientName) {
+        return this.categorizeIngredient(userId, ingredientName);
     }
 }
 exports.GroceryListService = GroceryListService;

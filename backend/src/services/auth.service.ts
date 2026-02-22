@@ -1,13 +1,13 @@
 import * as crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
-import { StorageService } from '../storage/storage.service';
+import { StorageAdapter } from '../storage/storage-factory';
 import { User, CreateUserDto, LoginDto, AuthResponse } from '../models/user.model';
 import { Session } from '../models/session.model';
 
 export class AuthService {
-  private storage: StorageService;
+  private storage: StorageAdapter;
 
-  constructor(storage: StorageService) {
+  constructor(storage: StorageAdapter) {
     this.storage = storage;
   }
 
@@ -47,12 +47,33 @@ export class AuthService {
     };
 
     // Store session in storage
-    const data = this.storage.read();
-    if (!data.sessions) {
-      data.sessions = {};
+    this.storage.setSession(token, session);
+
+    return session;
+  }
+
+  /**
+   * Create a new session for a user (async version)
+   * Sessions expire after 1 year
+   */
+  private async createSessionAsync(userId: string): Promise<Session> {
+    const token = uuidv4();
+    const createdAt = new Date().toISOString();
+    const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(); // 1 year
+
+    const session: Session = {
+      token,
+      userId,
+      createdAt,
+      expiresAt,
+    };
+
+    // Store session in storage
+    if ('setSessionAsync' in this.storage) {
+      await (this.storage as any).setSessionAsync(token, session);
+    } else {
+      this.storage.setSession(token, session);
     }
-    data.sessions[token] = session;
-    this.storage.write(data);
 
     return session;
   }
@@ -62,17 +83,10 @@ export class AuthService {
    * Requirements: 1.1, 1.3, 1.4
    */
   async signup(dto: CreateUserDto): Promise<AuthResponse> {
-    const data = this.storage.read();
-
-    // Initialize users object if it doesn't exist
-    if (!data.users) {
-      data.users = {};
-    }
-
     // Check if username already exists (Requirement 1.3)
-    const existingUser = Object.values(data.users).find(
-      (user: any) => user.username === dto.username
-    );
+    const existingUser = 'getUserByUsernameAsync' in this.storage
+      ? await (this.storage as any).getUserByUsernameAsync(dto.username)
+      : this.storage.getUserByUsername(dto.username);
 
     if (existingUser) {
       throw new Error('Username already exists');
@@ -84,22 +98,28 @@ export class AuthService {
     const createdAt = new Date().toISOString();
 
     // Initialize with common categories (Requirement 1.2)
-    const commonCategories = data.commonCategories || {};
+    // Copy commonCategories to the new user's customCategories
+    const commonCategories = 'getCommonCategoriesAsync' in this.storage
+      ? await (this.storage as any).getCommonCategoriesAsync()
+      : this.storage.getCommonCategories();
     
     const user: User = {
       id: userId,
       username: dto.username,
       passwordHash,
       createdAt,
-      customCategories: {}, // Start with empty custom categories
+      customCategories: { ...commonCategories }, // Initialize with copy of common categories
     };
 
     // Save user
-    data.users[userId] = user;
-    this.storage.write(data);
+    if ('setUserAsync' in this.storage) {
+      await (this.storage as any).setUserAsync(userId, user);
+    } else {
+      this.storage.setUser(userId, user);
+    }
 
     // Create session
-    const session = this.createSession(userId);
+    const session = await this.createSessionAsync(userId);
 
     return {
       token: session.token,
@@ -113,16 +133,10 @@ export class AuthService {
    * Requirements: 2.1, 2.2, 2.4
    */
   async login(dto: LoginDto): Promise<AuthResponse> {
-    const data = this.storage.read();
-
-    if (!data.users) {
-      throw new Error('Invalid credentials');
-    }
-
     // Find user by username
-    const user = Object.values(data.users).find(
-      (u: any) => u.username === dto.username
-    ) as User | undefined;
+    const user = 'getUserByUsernameAsync' in this.storage
+      ? await (this.storage as any).getUserByUsernameAsync(dto.username)
+      : this.storage.getUserByUsername(dto.username);
 
     if (!user) {
       throw new Error('Invalid credentials'); // Requirement 2.2
@@ -136,7 +150,7 @@ export class AuthService {
     }
 
     // Create session (Requirement 2.1)
-    const session = this.createSession(user.id);
+    const session = await this.createSessionAsync(user.id);
 
     return {
       token: session.token,
@@ -150,13 +164,9 @@ export class AuthService {
    * Requirements: 2.3
    */
   async validateSession(token: string): Promise<string | null> {
-    const data = this.storage.read();
-
-    if (!data.sessions) {
-      return null;
-    }
-
-    const session = data.sessions[token];
+    const session = 'getSessionAsync' in this.storage
+      ? await (this.storage as any).getSessionAsync(token)
+      : this.storage.getSession(token);
 
     if (!session) {
       return null;
@@ -168,8 +178,11 @@ export class AuthService {
 
     if (now > expiresAt) {
       // Session expired, remove it
-      delete data.sessions[token];
-      this.storage.write(data);
+      if ('deleteSessionAsync' in this.storage) {
+        await (this.storage as any).deleteSessionAsync(token);
+      } else {
+        this.storage.deleteSession(token);
+      }
       return null;
     }
 
@@ -180,12 +193,9 @@ export class AuthService {
    * Get user by ID
    */
   async getUserById(userId: string): Promise<User | null> {
-    const data = this.storage.read();
-
-    if (!data.users) {
-      return null;
+    if ('getUserAsync' in this.storage) {
+      return await (this.storage as any).getUserAsync(userId);
     }
-
-    return data.users[userId] || null;
+    return this.storage.getUser(userId);
   }
 }

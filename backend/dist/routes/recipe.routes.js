@@ -41,9 +41,10 @@ function createRecipeRouter(recipeService) {
     /**
      * GET /api/recipes - Retrieve all recipes
      */
-    router.get('/', (req, res) => {
+    router.get('/', async (req, res) => {
         try {
-            const recipes = recipeService.list();
+            const userId = req.userId;
+            const recipes = await recipeService.list(userId);
             res.json(recipes);
         }
         catch (error) {
@@ -56,9 +57,10 @@ function createRecipeRouter(recipeService) {
     /**
      * GET /api/recipes/ingredients/names - Get all unique ingredient names
      */
-    router.get('/ingredients/names', (req, res) => {
+    router.get('/ingredients/names', async (req, res) => {
         try {
-            const ingredientNames = recipeService.getUniqueIngredientNames();
+            const userId = req.userId;
+            const ingredientNames = await recipeService.getUniqueIngredientNames(userId);
             res.json(ingredientNames);
         }
         catch (error) {
@@ -108,10 +110,11 @@ function createRecipeRouter(recipeService) {
     /**
      * GET /api/recipes/:id - Retrieve a specific recipe
      */
-    router.get('/:id', (req, res) => {
+    router.get('/:id', async (req, res) => {
         try {
+            const userId = req.userId;
             const id = req.params.id;
-            const recipe = recipeService.read(id);
+            const recipe = await recipeService.read(userId, id);
             if (!recipe) {
                 res.status(404).json({ error: 'Recipe not found' });
                 return;
@@ -128,9 +131,10 @@ function createRecipeRouter(recipeService) {
     /**
      * POST /api/recipes - Create a new recipe
      */
-    router.post('/', validation_middleware_1.validateCreateRecipe, (req, res) => {
+    router.post('/', validation_middleware_1.validateCreateRecipe, async (req, res) => {
         try {
-            const recipe = recipeService.create(req.body);
+            const userId = req.userId;
+            const recipe = await recipeService.create(userId, req.body);
             res.status(201).json(recipe);
         }
         catch (error) {
@@ -143,10 +147,11 @@ function createRecipeRouter(recipeService) {
     /**
      * PUT /api/recipes/:id - Update a recipe
      */
-    router.put('/:id', validation_middleware_1.validateUpdateRecipe, (req, res) => {
+    router.put('/:id', validation_middleware_1.validateUpdateRecipe, async (req, res) => {
         try {
+            const userId = req.userId;
             const id = req.params.id;
-            const recipe = recipeService.update(id, req.body);
+            const recipe = await recipeService.update(userId, id, req.body);
             if (!recipe) {
                 res.status(404).json({ error: 'Recipe not found' });
                 return;
@@ -163,10 +168,11 @@ function createRecipeRouter(recipeService) {
     /**
      * DELETE /api/recipes/:id - Delete a recipe
      */
-    router.delete('/:id', (req, res) => {
+    router.delete('/:id', async (req, res) => {
         try {
+            const userId = req.userId;
             const id = req.params.id;
-            const deleted = recipeService.delete(id);
+            const deleted = await recipeService.delete(userId, id);
             if (!deleted) {
                 res.status(404).json({ error: 'Recipe not found' });
                 return;

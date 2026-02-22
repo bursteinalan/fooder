@@ -54,7 +54,12 @@ class StorageService {
             }
             // Create storage file with initial structure if it doesn't exist
             if (!fs.existsSync(this.storagePath)) {
-                const initialData = { recipes: {} };
+                const initialData = {
+                    recipes: {},
+                    users: {},
+                    sessions: {},
+                    commonCategories: {},
+                };
                 fs.writeFileSync(this.storagePath, JSON.stringify(initialData, null, 2), 'utf-8');
             }
         }
@@ -75,6 +80,15 @@ class StorageService {
             }
             if (!parsed.recipes || typeof parsed.recipes !== 'object') {
                 throw new Error('Invalid storage format: recipes must be an object');
+            }
+            if (!parsed.users || typeof parsed.users !== 'object') {
+                throw new Error('Invalid storage format: users must be an object');
+            }
+            if (!parsed.sessions || typeof parsed.sessions !== 'object') {
+                throw new Error('Invalid storage format: sessions must be an object');
+            }
+            if (!parsed.commonCategories || typeof parsed.commonCategories !== 'object') {
+                throw new Error('Invalid storage format: commonCategories must be an object');
             }
             return parsed;
         }
@@ -101,6 +115,15 @@ class StorageService {
             }
             if (!data.recipes || typeof data.recipes !== 'object') {
                 throw new Error('Invalid data: recipes must be an object');
+            }
+            if (!data.users || typeof data.users !== 'object') {
+                throw new Error('Invalid data: users must be an object');
+            }
+            if (!data.sessions || typeof data.sessions !== 'object') {
+                throw new Error('Invalid data: sessions must be an object');
+            }
+            if (!data.commonCategories || typeof data.commonCategories !== 'object') {
+                throw new Error('Invalid data: commonCategories must be an object');
             }
             // Create backup of current file if it exists
             if (fs.existsSync(this.storagePath)) {
@@ -170,6 +193,126 @@ class StorageService {
     has(key) {
         const data = this.read();
         return key in data.recipes;
+    }
+    // User operations
+    /**
+     * Get user by ID
+     */
+    getUser(userId) {
+        const data = this.read();
+        return data.users[userId] || null;
+    }
+    /**
+     * Get user by username
+     */
+    getUserByUsername(username) {
+        const data = this.read();
+        const users = Object.values(data.users);
+        return users.find(user => user.username === username) || null;
+    }
+    /**
+     * Create or update user
+     */
+    setUser(userId, user) {
+        const data = this.read();
+        data.users[userId] = user;
+        this.write(data);
+    }
+    /**
+     * Delete user
+     */
+    deleteUser(userId) {
+        const data = this.read();
+        if (userId in data.users) {
+            delete data.users[userId];
+            this.write(data);
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Get all users
+     */
+    getAllUsers() {
+        const data = this.read();
+        return data.users;
+    }
+    // Session operations
+    /**
+     * Get session by token
+     */
+    getSession(token) {
+        const data = this.read();
+        return data.sessions[token] || null;
+    }
+    /**
+     * Create or update session
+     */
+    setSession(token, session) {
+        const data = this.read();
+        data.sessions[token] = session;
+        this.write(data);
+    }
+    /**
+     * Delete session
+     */
+    deleteSession(token) {
+        const data = this.read();
+        if (token in data.sessions) {
+            delete data.sessions[token];
+            this.write(data);
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Get all sessions for a user
+     */
+    getUserSessions(userId) {
+        const data = this.read();
+        return Object.values(data.sessions).filter(session => session.userId === userId);
+    }
+    /**
+     * Delete all sessions for a user
+     */
+    deleteUserSessions(userId) {
+        const data = this.read();
+        const sessions = data.sessions;
+        let deletedCount = 0;
+        for (const token in sessions) {
+            if (sessions[token].userId === userId) {
+                delete sessions[token];
+                deletedCount++;
+            }
+        }
+        if (deletedCount > 0) {
+            this.write(data);
+        }
+        return deletedCount;
+    }
+    // Common categories operations
+    /**
+     * Get common categories
+     */
+    getCommonCategories() {
+        const data = this.read();
+        return data.commonCategories;
+    }
+    /**
+     * Set common categories
+     */
+    setCommonCategories(categories) {
+        const data = this.read();
+        data.commonCategories = categories;
+        this.write(data);
+    }
+    /**
+     * Update a single common category
+     */
+    setCommonCategory(ingredient, category) {
+        const data = this.read();
+        data.commonCategories[ingredient] = category;
+        this.write(data);
     }
 }
 exports.StorageService = StorageService;

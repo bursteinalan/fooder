@@ -7,8 +7,9 @@ function createGroceryListRouter(groceryListService) {
     /**
      * POST /api/grocery-list - Generate consolidated grocery list from recipe IDs
      */
-    router.post('/', (req, res) => {
+    router.post('/', async (req, res) => {
         try {
+            const userId = req.userId;
             const { recipeIds } = req.body;
             // Validate request body
             if (!recipeIds || !Array.isArray(recipeIds)) {
@@ -26,7 +27,7 @@ function createGroceryListRouter(groceryListService) {
                 return;
             }
             // Generate consolidated grocery list
-            const items = groceryListService.generateGroceryList(recipeIds);
+            const items = await groceryListService.generateGroceryList(userId, recipeIds);
             res.json({ items });
         }
         catch (error) {
@@ -39,9 +40,10 @@ function createGroceryListRouter(groceryListService) {
     /**
      * GET /api/grocery-list/uncategorized - Get all uncategorized ingredients
      */
-    router.get('/uncategorized', (req, res) => {
+    router.get('/uncategorized', async (req, res) => {
         try {
-            const uncategorized = groceryListService.getUncategorizedIngredients();
+            const userId = req.userId;
+            const uncategorized = await groceryListService.getUncategorizedIngredients(userId);
             res.json({ ingredients: uncategorized, count: uncategorized.length });
         }
         catch (error) {
@@ -69,8 +71,9 @@ function createGroceryListRouter(groceryListService) {
     /**
      * PUT /api/grocery-list/categorize - Update ingredient category
      */
-    router.put('/categorize', (req, res) => {
+    router.put('/categorize', async (req, res) => {
         try {
+            const userId = req.userId;
             const { ingredientName, category } = req.body;
             if (!ingredientName || typeof ingredientName !== 'string') {
                 res.status(400).json({ error: 'ingredientName is required and must be a string' });
@@ -80,7 +83,7 @@ function createGroceryListRouter(groceryListService) {
                 res.status(400).json({ error: 'category is required and must be a string' });
                 return;
             }
-            groceryListService.updateIngredientCategory(ingredientName, category);
+            await groceryListService.updateIngredientCategory(userId, ingredientName, category);
             res.json({ success: true, message: 'Category updated successfully' });
         }
         catch (error) {
@@ -93,10 +96,11 @@ function createGroceryListRouter(groceryListService) {
     /**
      * GET /api/grocery-list/category/:ingredientName - Get category for ingredient
      */
-    router.get('/category/:ingredientName', (req, res) => {
+    router.get('/category/:ingredientName', async (req, res) => {
         try {
+            const userId = req.userId;
             const ingredientName = req.params.ingredientName;
-            const category = groceryListService.getIngredientCategory(ingredientName);
+            const category = await groceryListService.getIngredientCategory(userId, ingredientName);
             res.json({ ingredientName, category });
         }
         catch (error) {

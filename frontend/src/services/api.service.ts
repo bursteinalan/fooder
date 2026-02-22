@@ -4,15 +4,42 @@ import type {
   UpdateRecipeDto,
   GroceryListResponse,
   ApiError,
+  AuthResponse,
+  LoginDto,
+  SignupDto,
+  CurrentUser,
+  Ingredient,
 } from '../types/recipe.types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 class ApiService {
   private baseUrl: string;
+  private tokenKey = 'auth_token';
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
+  }
+
+  /**
+   * Get the stored authentication token
+   */
+  private getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  /**
+   * Set the authentication token
+   */
+  setToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+  /**
+   * Clear the authentication token
+   */
+  clearToken(): void {
+    localStorage.removeItem(this.tokenKey);
   }
 
   /**
@@ -23,13 +50,38 @@ class ApiService {
     options?: RequestInit
   ): Promise<T> {
     try {
+      const token = this.getToken();
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+
+      // Add any additional headers from options
+      if (options?.headers) {
+        Object.entries(options.headers).forEach(([key, value]) => {
+          if (typeof value === 'string') {
+            headers[key] = value;
+          }
+        });
+      }
+
+      // Add Authorization header if token exists
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${this.baseUrl}${url}`, {
         ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options?.headers,
-        },
+        headers,
       });
+
+      // Handle 401 Unauthorized - clear session and redirect to login
+      if (response.status === 401) {
+        this.clearToken();
+        // Dispatch custom event to notify auth context
+        window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+        const error = await response.json().catch(() => ({ error: 'Unauthorized' }));
+        throw new Error(error.message || error.error || 'Unauthorized');
+      }
 
       // Handle 204 No Content
       if (response.status === 204) {
@@ -51,6 +103,41 @@ class ApiService {
       throw new Error('Network error occurred');
     }
   }
+
+  // ============================================
+  // Authentication Methods
+  // ============================================
+
+  /**
+   * POST /api/auth/signup - Create a new user account
+   */
+  async signup(dto: SignupDto): Promise<AuthResponse> {
+    return this.fetchWithErrorHandling<AuthResponse>('/api/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  /**
+   * POST /api/auth/login - Authenticate user
+   */
+  async login(dto: LoginDto): Promise<AuthResponse> {
+    return this.fetchWithErrorHandling<AuthResponse>('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  /**
+   * GET /api/auth/me - Get current user info
+   */
+  async getCurrentUser(): Promise<CurrentUser> {
+    return this.fetchWithErrorHandling<CurrentUser>('/api/auth/me');
+  }
+
+  // ============================================
+  // Recipe Methods
+  // ============================================
 
   /**
    * GET /api/recipes - Retrieve all recipes

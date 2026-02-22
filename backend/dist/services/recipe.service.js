@@ -9,10 +9,11 @@ class RecipeService {
     /**
      * Create a new recipe
      */
-    create(dto) {
+    async create(userId, dto) {
         const now = new Date().toISOString();
         const recipe = {
             id: (0, uuid_1.v4)(),
+            userId,
             title: dto.title,
             ingredients: dto.ingredients,
             instructions: dto.instructions,
@@ -20,51 +21,81 @@ class RecipeService {
             createdAt: now,
             updatedAt: now,
         };
-        this.storage.set(recipe.id, recipe);
+        if ('setAsync' in this.storage) {
+            await this.storage.setAsync(recipe.id, recipe);
+        }
+        else {
+            this.storage.set(recipe.id, recipe);
+        }
         return recipe;
     }
     /**
      * Get a recipe by ID
      */
-    read(id) {
-        return this.storage.get(id);
+    async read(userId, id) {
+        const recipe = 'getAsync' in this.storage
+            ? await this.storage.getAsync(id)
+            : this.storage.get(id);
+        if (!recipe || recipe.userId !== userId) {
+            return null;
+        }
+        return recipe;
     }
     /**
      * Update a recipe
      */
-    update(id, dto) {
-        const existing = this.storage.get(id);
-        if (!existing) {
+    async update(userId, id, dto) {
+        const existing = 'getAsync' in this.storage
+            ? await this.storage.getAsync(id)
+            : this.storage.get(id);
+        if (!existing || existing.userId !== userId) {
             return null;
         }
         const updated = {
             ...existing,
             ...dto,
             id: existing.id,
+            userId: existing.userId,
             createdAt: existing.createdAt,
             updatedAt: new Date().toISOString(),
         };
-        this.storage.set(id, updated);
+        if ('setAsync' in this.storage) {
+            await this.storage.setAsync(id, updated);
+        }
+        else {
+            this.storage.set(id, updated);
+        }
         return updated;
     }
     /**
      * Delete a recipe
      */
-    delete(id) {
+    async delete(userId, id) {
+        const recipe = 'getAsync' in this.storage
+            ? await this.storage.getAsync(id)
+            : this.storage.get(id);
+        if (!recipe || recipe.userId !== userId) {
+            return false;
+        }
+        if ('deleteAsync' in this.storage) {
+            return await this.storage.deleteAsync(id);
+        }
         return this.storage.delete(id);
     }
     /**
      * List all recipes
      */
-    list() {
-        const allRecipes = this.storage.getAll();
-        return Object.values(allRecipes);
+    async list(userId) {
+        const allRecipes = 'getAllAsync' in this.storage
+            ? await this.storage.getAllAsync()
+            : this.storage.getAll();
+        return Object.values(allRecipes).filter((recipe) => recipe.userId === userId);
     }
     /**
      * Get all unique ingredient names from all recipes
      */
-    getUniqueIngredientNames() {
-        const recipes = this.list();
+    async getUniqueIngredientNames(userId) {
+        const recipes = await this.list(userId);
         const ingredientNames = new Set();
         recipes.forEach(recipe => {
             recipe.ingredients.forEach(ingredient => {

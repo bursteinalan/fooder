@@ -1,2 +1,26 @@
 .kiro/
 .vscode/
+
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Build outputs
+backend/dist/
+frontend/dist/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Data files
+backend/data/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db

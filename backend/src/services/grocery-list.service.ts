@@ -1,6 +1,6 @@
 import { RecipeService } from './recipe.service';
 import { Ingredient } from '../models/recipe.model';
-import { StorageService } from '../storage/storage.service';
+import { StorageAdapter } from '../storage/storage-factory';
 
 export interface ConsolidatedIngredient {
   name: string;
@@ -25,9 +25,9 @@ export const AVAILABLE_CATEGORIES = [
 
 export class GroceryListService {
   private recipeService: RecipeService;
-  private storageService: StorageService;
+  private storageService: StorageAdapter;
 
-  constructor(recipeService: RecipeService, storageService: StorageService) {
+  constructor(recipeService: RecipeService, storageService: StorageAdapter) {
     this.recipeService = recipeService;
     this.storageService = storageService;
   }
@@ -35,17 +35,23 @@ export class GroceryListService {
   /**
    * Categorize an ingredient using user-specific categories
    */
-  private categorizeIngredient(userId: string, ingredientName: string): string {
+  private async categorizeIngredient(userId: string, ingredientName: string): Promise<string> {
     const normalized = ingredientName.toLowerCase().trim();
     
     // Get user's custom categories
-    const user = this.storageService.getUser(userId);
+    const user = 'getUserAsync' in this.storageService
+      ? await (this.storageService as any).getUserAsync(userId)
+      : this.storageService.getUser(userId);
+    
     if (user && user.customCategories && user.customCategories[normalized]) {
       return user.customCategories[normalized];
     }
     
     // Fall back to common categories
-    const commonCategories = this.storageService.getCommonCategories();
+    const commonCategories = 'getCommonCategoriesAsync' in this.storageService
+      ? await (this.storageService as any).getCommonCategoriesAsync()
+      : this.storageService.getCommonCategories();
+    
     if (commonCategories[normalized]) {
       return commonCategories[normalized];
     }
@@ -53,7 +59,7 @@ export class GroceryListService {
     // Check if ingredient name contains any category keyword in common categories
     for (const [keyword, category] of Object.entries(commonCategories)) {
       if (normalized.includes(keyword)) {
-        return category;
+        return category as string;
       }
     }
     
@@ -65,12 +71,12 @@ export class GroceryListService {
    * Generate a consolidated grocery list from multiple recipe IDs
    * Combines ingredients with matching names and units, and categorizes them
    */
-  generateGroceryList(userId: string, recipeIds: string[]): ConsolidatedIngredient[] {
+  async generateGroceryList(userId: string, recipeIds: string[]): Promise<ConsolidatedIngredient[]> {
     const ingredientMap = new Map<string, ConsolidatedIngredient>();
 
     // Iterate through each recipe
     for (const recipeId of recipeIds) {
-      const recipe = this.recipeService.read(userId, recipeId);
+      const recipe = await this.recipeService.read(userId, recipeId);
       
       if (!recipe) {
         continue; // Skip invalid recipe IDs
@@ -94,7 +100,7 @@ export class GroceryListService {
             name: normalizedName,
             quantity: ingredient.quantity,
             unit: normalizedUnit,
-            category: this.categorizeIngredient(userId, normalizedName),
+            category: await this.categorizeIngredient(userId, normalizedName),
           });
         }
       }
@@ -114,18 +120,19 @@ export class GroceryListService {
   /**
    * Get all unique ingredient names that are categorized as "Other"
    */
-  getUncategorizedIngredients(userId: string): string[] {
-    const recipes = this.recipeService.list(userId);
+  async getUncategorizedIngredients(userId: string): Promise<string[]> {
+    const recipes = await this.recipeService.list(userId);
     const uncategorized = new Set<string>();
 
-    recipes.forEach(recipe => {
-      recipe.ingredients.forEach(ingredient => {
+    for (const recipe of recipes) {
+      for (const ingredient of recipe.ingredients) {
         const normalized = ingredient.name.toLowerCase().trim();
-        if (this.categorizeIngredient(userId, normalized) === 'Other') {
+        const category = await this.categorizeIngredient(userId, normalized);
+        if (category === 'Other') {
           uncategorized.add(normalized);
         }
-      });
-    });
+      }
+    }
 
     return Array.from(uncategorized).sort();
   }
@@ -133,7 +140,7 @@ export class GroceryListService {
   /**
    * Update the category for a specific ingredient
    */
-  updateIngredientCategory(userId: string, ingredientName: string, category: string): void {
+  async updateIngredientCategory(userId: string, ingredientName: string, category: string): Promise<void> {
     const normalized = ingredientName.toLowerCase().trim();
     
     if (!AVAILABLE_CATEGORIES.includes(category)) {
@@ -141,7 +148,10 @@ export class GroceryListService {
     }
     
     // Get user and update their custom categories
-    const user = this.storageService.getUser(userId);
+    const user = 'getUserAsync' in this.storageService
+      ? await (this.storageService as any).getUserAsync(userId)
+      : this.storageService.getUser(userId);
+    
     if (!user) {
       throw new Error(`User not found: ${userId}`);
     }
@@ -152,7 +162,12 @@ export class GroceryListService {
     }
     
     user.customCategories[normalized] = category;
-    this.storageService.setUser(userId, user);
+    
+    if ('setUserAsync' in this.storageService) {
+      await (this.storageService as any).setUserAsync(userId, user);
+    } else {
+      this.storageService.setUser(userId, user);
+    }
   }
 
   /**
@@ -165,7 +180,7 @@ export class GroceryListService {
   /**
    * Get the category for a specific ingredient
    */
-  getIngredientCategory(userId: string, ingredientName: string): string {
+  async getIngredientCategory(userId: string, ingredientName: string): Promise<string> {
     return this.categorizeIngredient(userId, ingredientName);
   }
 }

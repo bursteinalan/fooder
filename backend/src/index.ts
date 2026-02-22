@@ -1,9 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { createStorageService } from './storage/storage-factory';
 import { StorageService } from './storage/storage.service';
 import { RecipeService } from './services/recipe.service';
 import { GroceryListService } from './services/grocery-list.service';
 import { AuthService } from './services/auth.service';
+import { MigrationService } from './services/migration.service';
 import { createAuthMiddleware } from './middleware/auth.middleware';
 import { createRecipeRouter } from './routes/recipe.routes';
 import { createGroceryListRouter } from './routes/grocery-list.routes';
@@ -14,31 +17,65 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || '*',
   credentials: true,
 }));
 app.use(express.json());
 
-// Initialize services
-const storageService = new StorageService();
-const authService = new AuthService(storageService);
-const recipeService = new RecipeService(storageService);
-const groceryListService = new GroceryListService(recipeService, storageService);
+// Run migration and start server
+async function startServer() {
+  try {
+    // Initialize storage (Firestore or file-based)
+    const storageService = createStorageService();
+    
+    // Run migration only for file-based storage
+    if (storageService instanceof StorageService) {
+      const migrationService = new MigrationService(storageService);
+      
+      if (migrationService.needsMigration()) {
+        console.log('Migration needed. Running migration...');
+        await migrationService.migrate();
+        console.log('Migration completed successfully.');
+      } else {
+        console.log('No migration needed. Storage structure is up to date.');
+      }
+    }
 
-// Initialize auth middleware
-const authMiddleware = createAuthMiddleware(authService);
+    // Initialize services
+    const authService = new AuthService(storageService);
+    const recipeService = new RecipeService(storageService);
+    const groceryListService = new GroceryListService(recipeService, storageService);
 
-// Routes
-app.use('/api/auth', createAuthRouter(authService, authMiddleware));
-app.use('/api/recipes', authMiddleware, createRecipeRouter(recipeService));
-app.use('/api/grocery-list', authMiddleware, createGroceryListRouter(groceryListService));
+    // Initialize auth middleware
+    const authMiddleware = createAuthMiddleware(authService);
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
+    // API Routes
+    app.use('/api/auth', createAuthRouter(authService, authMiddleware));
+    app.use('/api/recipes', authMiddleware, createRecipeRouter(recipeService));
+    app.use('/api/grocery-list', authMiddleware, createGroceryListRouter(groceryListService));
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+    // Health check endpoint
+    app.get('/health', (req, res) => {
+      res.json({ status: 'ok' });
+    });
+
+    // Serve static files from frontend build (for production)
+    const frontendPath = path.join(__dirname, '../../frontend/dist');
+    app.use(express.static(frontendPath));
+
+    // Serve index.html for all other routes (SPA support)
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(frontendPath, 'index.html'));
+    });
+
+    // Start server
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error instanceof Error ? error.message : 'Unknown error');
+    process.exit(1);
+  }
+}
+
+startServer();

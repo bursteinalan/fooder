@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
-import { StorageService } from '../storage/storage.service';
+import { StorageAdapter } from '../storage/storage-factory';
 import { Recipe, CreateRecipeDto, UpdateRecipeDto } from '../models/recipe.model';
 
 export class RecipeService {
-  private storage: StorageService;
+  private storage: StorageAdapter;
 
-  constructor(storage: StorageService) {
+  constructor(storage: StorageAdapter) {
     this.storage = storage;
   }
 
   /**
    * Create a new recipe
    */
-  create(userId: string, dto: CreateRecipeDto): Recipe {
+  async create(userId: string, dto: CreateRecipeDto): Promise<Recipe> {
     const now = new Date().toISOString();
     const recipe: Recipe = {
       id: uuidv4(),
@@ -25,15 +25,22 @@ export class RecipeService {
       updatedAt: now,
     };
 
-    this.storage.set(recipe.id, recipe);
+    if ('setAsync' in this.storage) {
+      await (this.storage as any).setAsync(recipe.id, recipe);
+    } else {
+      this.storage.set(recipe.id, recipe);
+    }
     return recipe;
   }
 
   /**
    * Get a recipe by ID
    */
-  read(userId: string, id: string): Recipe | null {
-    const recipe = this.storage.get(id);
+  async read(userId: string, id: string): Promise<Recipe | null> {
+    const recipe = 'getAsync' in this.storage
+      ? await (this.storage as any).getAsync(id)
+      : this.storage.get(id);
+    
     if (!recipe || recipe.userId !== userId) {
       return null;
     }
@@ -43,8 +50,11 @@ export class RecipeService {
   /**
    * Update a recipe
    */
-  update(userId: string, id: string, dto: UpdateRecipeDto): Recipe | null {
-    const existing = this.storage.get(id);
+  async update(userId: string, id: string, dto: UpdateRecipeDto): Promise<Recipe | null> {
+    const existing = 'getAsync' in this.storage
+      ? await (this.storage as any).getAsync(id)
+      : this.storage.get(id);
+    
     if (!existing || existing.userId !== userId) {
       return null;
     }
@@ -58,17 +68,28 @@ export class RecipeService {
       updatedAt: new Date().toISOString(),
     };
 
-    this.storage.set(id, updated);
+    if ('setAsync' in this.storage) {
+      await (this.storage as any).setAsync(id, updated);
+    } else {
+      this.storage.set(id, updated);
+    }
     return updated;
   }
 
   /**
    * Delete a recipe
    */
-  delete(userId: string, id: string): boolean {
-    const recipe = this.storage.get(id);
+  async delete(userId: string, id: string): Promise<boolean> {
+    const recipe = 'getAsync' in this.storage
+      ? await (this.storage as any).getAsync(id)
+      : this.storage.get(id);
+    
     if (!recipe || recipe.userId !== userId) {
       return false;
+    }
+    
+    if ('deleteAsync' in this.storage) {
+      return await (this.storage as any).deleteAsync(id);
     }
     return this.storage.delete(id);
   }
@@ -76,16 +97,19 @@ export class RecipeService {
   /**
    * List all recipes
    */
-  list(userId: string): Recipe[] {
-    const allRecipes = this.storage.getAll();
-    return Object.values(allRecipes).filter(recipe => recipe.userId === userId);
+  async list(userId: string): Promise<Recipe[]> {
+    const allRecipes = 'getAllAsync' in this.storage
+      ? await (this.storage as any).getAllAsync()
+      : this.storage.getAll();
+    
+    return Object.values(allRecipes).filter((recipe: any) => recipe.userId === userId) as Recipe[];
   }
 
   /**
    * Get all unique ingredient names from all recipes
    */
-  getUniqueIngredientNames(userId: string): string[] {
-    const recipes = this.list(userId);
+  async getUniqueIngredientNames(userId: string): Promise<string[]> {
+    const recipes = await this.list(userId);
     const ingredientNames = new Set<string>();
 
     recipes.forEach(recipe => {

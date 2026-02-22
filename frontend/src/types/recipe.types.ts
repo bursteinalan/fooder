@@ -43,3 +43,24 @@ export interface ApiError {
   error: string;
   message?: string;
 }
+
+export interface AuthResponse {
+  token: string;
+  userId: string;
+  username: string;
+}
+
+export interface LoginDto {
+  username: string;
+  password: string;
+}
+
+export interface SignupDto {
+  username: string;
+  password: string;
+}
+
+export interface CurrentUser {
+  userId: string;
+  username: string;
+}
