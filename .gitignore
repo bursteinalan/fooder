@@ -26,3 +26,5 @@ npm-debug.log*
 Thumbs.db
 frontend/.env
 backend/.env
+node_modules/
+*/node_modules/
