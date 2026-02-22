@@ -16,11 +16,17 @@ RUN cd frontend && npm ci
 COPY backend ./backend
 COPY frontend ./frontend
 
-# Remove any existing build artifacts to ensure clean build
-RUN rm -rf frontend/dist backend/dist
+# Remove any existing build artifacts AND .env files to ensure clean build
+RUN rm -rf frontend/dist backend/dist frontend/.env frontend/.env.local frontend/.env.production
 
-# Build frontend (will use empty VITE_API_BASE_URL since .env is ignored)
+# Verify .env is gone
+RUN ls -la frontend/ | grep -E "\.env" || echo "No .env files found - good!"
+
+# Build frontend (will use empty VITE_API_BASE_URL since .env is removed)
 RUN cd frontend && npm run build
+
+# Verify the build output doesn't contain localhost
+RUN grep -r "localhost:3000" frontend/dist/ && echo "ERROR: localhost found in build!" && exit 1 || echo "Build is clean - no localhost references"
 
 # Build backend
 RUN cd backend && npm run build
