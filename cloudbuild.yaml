@@ -22,7 +22,7 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
-      - '--set-env-vars'
+      - '--update-env-vars'
       - 'USE_FIRESTORE=true,NODE_ENV=production'
 
 images:
