@@ -25,6 +25,9 @@ RUN cd backend && npm run build
 # Remove dev dependencies to reduce image size
 RUN cd backend && npm prune --production
 
+# Set default port (Cloud Run will override this)
+ENV PORT=8080
+
 # Expose port (Cloud Run will set PORT env var)
 EXPOSE 8080
 

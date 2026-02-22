@@ -61,16 +61,26 @@ async function startServer() {
 
     // Serve static files from frontend build (for production)
     const frontendPath = path.join(__dirname, '../../frontend/dist');
+    console.log('Frontend path:', frontendPath);
+    console.log('Frontend path exists:', require('fs').existsSync(frontendPath));
+    
     app.use(express.static(frontendPath));
 
     // Serve index.html for all other routes (SPA support)
     app.get('*', (req, res) => {
-      res.sendFile(path.join(frontendPath, 'index.html'));
+      const indexPath = path.join(frontendPath, 'index.html');
+      if (require('fs').existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        res.status(404).send('Frontend not found');
+      }
     });
 
     // Start server
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server is running on port ${PORT}`);
+      console.log(`Environment: ${process.env.NODE_ENV}`);
+      console.log(`Using Firestore: ${process.env.USE_FIRESTORE}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error instanceof Error ? error.message : 'Unknown error');
