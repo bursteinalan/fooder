@@ -1,0 +1,328 @@
+{
+  "recipes": {
+    "4a5b303c-aaa8-4db5-b3f4-39d837676a9e": {
+      "id": "4a5b303c-aaa8-4db5-b3f4-39d837676a9e",
+      "title": "Coconut Turmeric Chicken Soup",
+      "ingredients": [
+        {
+          "name": "onion",
+          "quantity": 1,
+          "unit": "whole"
+        },
+        {
+          "name": "garlic",
+          "quantity": 2,
+          "unit": "clove"
+        },
+        {
+          "name": "grated fresh ginger",
+          "quantity": 0.5,
+          "unit": "tbsp"
+        },
+        {
+          "name": "carrots",
+          "quantity": 0.5,
+          "unit": "lb"
+        },
+        {
+          "name": "chicken breast",
+          "quantity": 1,
+          "unit": "whole"
+        },
+        {
+          "name": "coconut milk",
+          "quantity": 13,
+          "unit": "oz"
+        },
+        {
+          "name": "lime",
+          "quantity": 2,
+          "unit": "whole"
+        }
+      ],
+      "instructions": "1. Dice the onion, mince the garlic, and grate the ginger. Add the onion, garlic, and ginger to a large soup pot with the olive oil and sauté over medium heat until the onions are soft and translucent.\n2. While the onion, garlic, and ginger are sautéing, peel and chop the carrots, and chop the celery.\n3. Once the onions are soft, add the turmeric, cumin, and red pepper flakes. Sauté for about minute more to toast the spices. Add the carrots and celery and sauté for a few minutes more, or just until they begin to soften.\n4. Add the chicken breast to the pot along with the chicken broth. Place a lid on the pot, turn the heat up to medium-high, and bring the broth to a boil. Once boiling, turn the heat down to medium-low, and let the broth simmer for 30 minutes.\n5. Once the chicken and vegetables have simmered in the broth for 30 minutes, remove the chicken breast and shred it with two forks. Return the shredded meat to the soup and add the coconut milk. Stir to combine and heat through over medium-low heat. Taste the soup and add salt to taste (I added 1/2 tsp).&nbsp;\n6. To serve, ladle about 1 1/3 cups soup into a bowl and top with 1/2 cup cooked rice, a few fresh cilantro leaves, and a wedge of lime.",
+      "createdAt": "2026-02-21T18:28:04.733Z",
+      "updatedAt": "2026-02-22T17:10:39.428Z",
+      "sourceUrl": "https://www.budgetbytes.com/coconut-turmeric-chicken-soup/"
+    },
+    "b3802729-6f78-49e6-a45e-0d95b6c6c333": {
+      "id": "b3802729-6f78-49e6-a45e-0d95b6c6c333",
+      "title": "Bò Kho (Vietnamese Beef Stew)",
+      "ingredients": [
+        {
+          "name": "beef shank",
+          "quantity": 2,
+          "unit": "lb"
+        },
+        {
+          "name": "garlic",
+          "quantity": 4,
+          "unit": "clove"
+        },
+        {
+          "name": "onion",
+          "quantity": 1,
+          "unit": "whole"
+        },
+        {
+          "name": "fresh ginger",
+          "quantity": 1.5,
+          "unit": "tbsp"
+        },
+        {
+          "name": "star anise",
+          "quantity": 4,
+          "unit": "piece"
+        },
+        {
+          "name": "bay leaves",
+          "quantity": 5,
+          "unit": "piece"
+        },
+        {
+          "name": "coconut soda, Coke, or Sprite",
+          "quantity": 6,
+          "unit": "oz"
+        },
+        {
+          "name": "carrots",
+          "quantity": 3,
+          "unit": "piece"
+        },
+        {
+          "name": "12\" Vietnamese bread loaves",
+          "quantity": 6,
+          "unit": "piece"
+        },
+        {
+          "name": "jalapenos",
+          "quantity": 2,
+          "unit": "whole"
+        },
+        {
+          "name": "lemon",
+          "quantity": 1,
+          "unit": "whole"
+        },
+        {
+          "name": "Thai basil",
+          "quantity": 1,
+          "unit": "bunch"
+        }
+      ],
+      "instructions": "1. Clean the meat. Add beef to a large pot and add 1 tbsp salt and enough tap water to barely cover the meat. Bring to a boil on high heat, and once it hits a boil for 30 seconds, kill the heat, drain, and rinse under running water to clean. If you haven&#x27;t cut the meat into 3/4 - 1&quot; pieces yet, do it now.\n2. Marinate the meat. Add all marinade ingredients to the meat in a covered bowl or a bag for at least two hours, but overnight would be better.\n3. Aromatics. Preheat a large pot on medium high. When hot, add the oil, let it warm a bit, then add all the garlic and stir to slowly saute until it turns light brown. Then add the paprika an stir until it releases its aroma, about 30 seconds.\n4. Broth. Add all broth ingredients to the pot except the carrots. Turn the heat to high until it hits a boil, then reduce heat so it maintains a low boil. Cook until the meat is as tender as you&#039;d like it, about 60-90 minutes. Add carrots towards the final 10 minutes so it softens. Discard the cooked onions and star anise pods.\n5. Serve with accoutrement as shown: tearing fresh Thai basil onto your plate, taking occasional bites of jalapeno, and dipping a few pieces of meat into the salt / pepper / lemon juice side for variety.",
+      "sourceUrl": "https://www.hungryhuy.com/bo-kho-recipe-vietnamese-beef-stew/",
+      "createdAt": "2026-02-21T19:20:39.859Z",
+      "updatedAt": "2026-02-22T17:13:20.507Z"
+    },
+    "a3c67282-bbd2-45ae-829f-8b21588d8f7e": {
+      "id": "a3c67282-bbd2-45ae-829f-8b21588d8f7e",
+      "title": "Greek Chicken",
+      "ingredients": [
+        {
+          "name": "lemon",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "name": "shallot",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "name": "garlic",
+          "quantity": 4,
+          "unit": "clove"
+        },
+        {
+          "name": "boneless, skinless chicken thighs",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "name": "fresh parsley",
+          "quantity": 3,
+          "unit": "sprigs"
+        }
+      ],
+      "instructions": "1. Prepare the following, adding each to the same medium bowl as you complete it: Finely grate the zest of 2 large lemons (2 tablespoons), then juice the lemons (about 1/3 cup). Mince 1 small shallot (about 3 tablespoons) and 4 garlic cloves (about 4 teaspoons).\n2. Add 1/4 cup olive oil, 2 teaspoons dried oregano, 1 1/2 teaspoons kosher salt, 1 teaspoon paprika, 1/2 teaspoon black pepper. Whisk to combine.\n3. Pat 2 pounds boneless, skinless chicken thighs dry with paper towels. Add to the marinade and turn to coat. Cover and refrigerate for at least 1 or up to 2 hours. Meanwhile, pick the leaves from 6 fresh parsley sprigs and finely chop (about 2 tablespoons); refrigerate until ready to use.\n4. Heat a 12-inch skillet or frying pan over medium-high heat until hot. Add half of the chicken in a single layer, shaking off any excess marinade back into the bowl. Cook until browned, cooked through, and at least 165ºF on an instant-read thermometer, 5 to 6 minutes per side. Transfer to a serving plate.\n5. Spoon off any remaining garlic in the pan. Repeat cooking the remaining chicken. Garnish with the parsley.",
+      "sourceUrl": "https://www.thekitchn.com/best-greek-chicken-recipe-23677166",
+      "createdAt": "2026-02-22T01:00:22.094Z",
+      "updatedAt": "2026-02-22T17:11:13.381Z"
+    },
+    "f49f1ede-b57d-4008-9ca3-f54f05f1b4d0": {
+      "id": "f49f1ede-b57d-4008-9ca3-f54f05f1b4d0",
+      "title": "Baked Feta Pasta",
+      "ingredients": [
+        {
+          "name": "shallot",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "name": "garlic",
+          "quantity": 3,
+          "unit": "clove"
+        },
+        {
+          "name": "cherry or grape tomatoes",
+          "quantity": 2,
+          "unit": "pint"
+        },
+        {
+          "name": "block feta",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "name": "thyme",
+          "quantity": 3,
+          "unit": "thyme"
+        },
+        {
+          "name": "short tubular pasta",
+          "quantity": 12,
+          "unit": "oz"
+        },
+        {
+          "name": "lemon",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "name": "Fresh basil leaves, for serving",
+          "quantity": 1,
+          "unit": "piece"
+        }
+      ],
+      "instructions": "1. Arrange a rack in center of oven; preheat to 400°. In a large ovenproof skillet or medium baking dish, combine shallot, garlic, tomatoes, and all but 1 Tbsp. oil; season with salt and red pepper flakes and toss to combine.\n2. Place feta into center of tomato mixture; drizzle with reserved 1 Tbsp. oil. Scatter thyme sprigs over tomatoes.\n3. Bake sauce until tomatoes are bursting and feta is golden on top, 40 to 45 minutes.\n4. Meanwhile, in a large pot of boiling salted water, cook pasta, stirring occasionally, until al dente according to package directions. Reserve 1/2 cup pasta water before draining.\n5. To sauce, add cooked pasta, reserved pasta water, and lemon zest (if using) and stir until combined. Top with basil.",
+      "sourceUrl": "https://www.delish.com/cooking/recipe-ideas/a35421563/baked-feta-pasta-tiktok/",
+      "createdAt": "2026-02-22T01:26:55.797Z",
+      "updatedAt": "2026-02-22T01:41:26.315Z"
+    },
+    "36abf522-c832-404b-8dbd-2a46f8ed06fc": {
+      "id": "36abf522-c832-404b-8dbd-2a46f8ed06fc",
+      "title": "Vietnamese Noodles with Lemongrass Chicken",
+      "ingredients": [
+        {
+          "name": "boneless, skinless chicken thighs",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "name": "garlic",
+          "quantity": 2,
+          "unit": "clove"
+        },
+        {
+          "name": "lime",
+          "quantity": 2,
+          "unit": "whole"
+        },
+        {
+          "name": "garlic",
+          "quantity": 2,
+          "unit": "clove"
+        },
+        {
+          "name": "lime juice",
+          "quantity": 3,
+          "unit": "tbsp"
+        },
+        {
+          "name": "vermicelli noodles",
+          "quantity": 7,
+          "unit": "oz"
+        },
+        {
+          "name": "iceberg lettuce",
+          "quantity": 5,
+          "unit": "cup"
+        },
+        {
+          "name": "bean sprouts",
+          "quantity": 3,
+          "unit": "cup"
+        },
+        {
+          "name": "mint leaves",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "name": "cilantro/coriander",
+          "quantity": 1,
+          "unit": "piece"
+        }
+      ],
+      "instructions": "Lemongrass Chicken\nCombine Chicken and Marinade ingredients and set aside for at least 1 hour, up to 24 hours. (Note 4)\nHeat 1/2 tbsp oil in a fry pan over medium heat (or heat the BBQ). Remove chicken from marinade, shaking off large bits of lemongrass (small bits should fall off during cooking).\nPlace chicken in the pan and cook each side until dark golden brown and chicken is just cooked through – about 6 to 8 minutes in total.\nRemove from pan, shaking off any remaining bits of visible lemongrass and set aside to rest for 5 minutes. Then slice into thin pieces.\nNuoc Cham Sauce\nCombine the Nuoc Cham ingredients and mix well to dissolve the sugar. Adjust to your taste (spiciness, lime, sweetness) and set aside for at least 20 minutes.\nAssemble\nSoak the vermicelli noodles in hot water for 3 minutes (or according to packet instructions), then drain and rinse under cold water to stop the noodles from sticking together.\nIndividual servings: Place noodles in bowl. Top with vegetables and herbs, and sliced chicken pieces. Drizzle with a few tablespoons of Nuoc Cham Sauce (be generous, ~ 4 tbsp per serving) and serve with lime wedges.\nDIY (my preferred way): Place chicken, vegetables, herbs, noodles and sauce in separate bowls / piled on platters. Then let everyone make their own bowls!",
+      "sourceUrl": "https://www.recipetineats.com/vietnamese-chicken-noodle-bowl/",
+      "createdAt": "2026-02-22T17:00:00.036Z",
+      "updatedAt": "2026-02-22T17:14:09.644Z"
+    },
+    "72595f82-8798-49be-a37b-350d890b5619": {
+      "id": "72595f82-8798-49be-a37b-350d890b5619",
+      "title": "Greek Salad",
+      "ingredients": [
+        {
+          "name": "romaine lettuce",
+          "quantity": 1,
+          "unit": "whole"
+        },
+        {
+          "name": "cherry tomatoes",
+          "quantity": 1,
+          "unit": "pint"
+        },
+        {
+          "name": "cucumbers",
+          "quantity": 1,
+          "unit": "whole"
+        }
+      ],
+      "instructions": "Combine",
+      "createdAt": "2026-02-22T17:01:26.955Z",
+      "updatedAt": "2026-02-22T17:01:26.955Z"
+    },
+    "807d3006-b5a6-417e-a4c9-01fcd01136b6": {
+      "id": "807d3006-b5a6-417e-a4c9-01fcd01136b6",
+      "title": "Authentic Dan Dan Noodles",
+      "ingredients": [
+        {
+          "name": "ground pork",
+          "quantity": 0.5,
+          "unit": "lb"
+        },
+        {
+          "name": "garlic",
+          "quantity": 4,
+          "unit": "clove"
+        },
+        {
+          "name": "noodles",
+          "quantity": 1,
+          "unit": "lb"
+        },
+        {
+          "name": "scallions",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "name": "crushed peanuts",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "name": "bok choy",
+          "quantity": 1,
+          "unit": "piece"
+        }
+      ],
+      "instructions": "1. Marinate the ground pork with Shaoxing wine, light soy sauce, dark soy sauce, white pepper, salt, and five spice powder for 15 minutes.\n2. In a large bowl, mix together the chili oil, light soy sauce, sesame paste, ground Sichuan peppercorns, five spice powder, sugar, MSG if using, and garlic.\n3. Fry the marinated ground pork in 1 tbsp of neutral oil over high heat, or until the pork fat has rendered and crisped in it&#39;s own fat, about 4-5 minutes. Set aside.\n4. Cook noodles in boiling water until al dente and transfer immediately to your sauce along with 1/4 cup of starchy noodle water. Add more water if needed to loosen up the sauce.\n5. Top with reserved pork, freshly chopped scallions, blanched bok choy, crushed peanuts and enjoy!",
+      "sourceUrl": "https://cjeatsrecipes.com/dan-dan-noodles/",
+      "createdAt": "2026-02-22T17:09:24.050Z",
+      "updatedAt": "2026-02-22T17:09:24.050Z"
+    }
+  }
+}
