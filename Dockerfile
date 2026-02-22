@@ -8,8 +8,8 @@ WORKDIR /app
 COPY backend/package*.json ./backend/
 COPY frontend/package*.json ./frontend/
 
-# Install dependencies
-RUN cd backend && npm ci --only=production
+# Install ALL dependencies (including dev dependencies for build)
+RUN cd backend && npm ci
 RUN cd frontend && npm ci
 
 # Copy source code
@@ -21,6 +21,9 @@ RUN cd frontend && npm run build
 
 # Build backend
 RUN cd backend && npm run build
+
+# Remove dev dependencies to reduce image size
+RUN cd backend && npm prune --production
 
 # Expose port (Cloud Run will set PORT env var)
 EXPOSE 8080
