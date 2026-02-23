@@ -3,6 +3,7 @@ import { User } from '../models/user.model';
 import { Session } from '../models/session.model';
 import { Recipe } from '../models/recipe.model';
 import { RecipeWithUser, StorageData } from './storage.service';
+import { SavedGroceryList } from '../models/saved-grocery-list.model';
 
 export class FirestoreService {
   private db: Firestore;
@@ -237,6 +238,79 @@ export class FirestoreService {
       { [ingredient]: category },
       { merge: true }
     );
+  }
+
+  // Saved grocery list operations
+  getSavedGroceryList(userId: string, listId: string): SavedGroceryList | null {
+    throw new Error('Use async getSavedGroceryListAsync() instead');
+  }
+
+  async getSavedGroceryListAsync(userId: string, listId: string): Promise<SavedGroceryList | null> {
+    const doc = await this.db
+      .collection('users')
+      .doc(userId)
+      .collection('savedGroceryLists')
+      .doc(listId)
+      .get();
+
+    if (!doc.exists) return null;
+    return { id: doc.id, ...doc.data() } as SavedGroceryList;
+  }
+
+  listSavedGroceryLists(userId: string): SavedGroceryList[] {
+    throw new Error('Use async listSavedGroceryListsAsync() instead');
+  }
+
+  async listSavedGroceryListsAsync(userId: string): Promise<SavedGroceryList[]> {
+    const snapshot = await this.db
+      .collection('users')
+      .doc(userId)
+      .collection('savedGroceryLists')
+      .get();
+
+    const lists: SavedGroceryList[] = [];
+    snapshot.forEach(doc => {
+      lists.push({ id: doc.id, ...doc.data() } as SavedGroceryList);
+    });
+    return lists;
+  }
+
+  setSavedGroceryList(userId: string, list: SavedGroceryList): void {
+    this.db
+      .collection('users')
+      .doc(userId)
+      .collection('savedGroceryLists')
+      .doc(list.id)
+      .set(list)
+      .catch(err => console.error('Error setting saved grocery list:', err));
+  }
+
+  async setSavedGroceryListAsync(userId: string, list: SavedGroceryList): Promise<void> {
+    await this.db
+      .collection('users')
+      .doc(userId)
+      .collection('savedGroceryLists')
+      .doc(list.id)
+      .set(list);
+  }
+
+  deleteSavedGroceryList(userId: string, listId: string): void {
+    this.db
+      .collection('users')
+      .doc(userId)
+      .collection('savedGroceryLists')
+      .doc(listId)
+      .delete()
+      .catch(err => console.error('Error deleting saved grocery list:', err));
+  }
+
+  async deleteSavedGroceryListAsync(userId: string, listId: string): Promise<void> {
+    await this.db
+      .collection('users')
+      .doc(userId)
+      .collection('savedGroceryLists')
+      .doc(listId)
+      .delete();
   }
 
   // Storage compatibility methods (not supported)

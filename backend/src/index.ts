@@ -6,11 +6,13 @@ import { StorageService } from './storage/storage.service';
 import { RecipeService } from './services/recipe.service';
 import { GroceryListService } from './services/grocery-list.service';
 import { AuthService } from './services/auth.service';
+import { SavedGroceryListService } from './services/saved-grocery-list.service';
 import { MigrationService } from './services/migration.service';
 import { createAuthMiddleware } from './middleware/auth.middleware';
 import { createRecipeRouter } from './routes/recipe.routes';
 import { createGroceryListRouter } from './routes/grocery-list.routes';
 import { createAuthRouter } from './routes/auth.routes';
+import { createSavedGroceryListRouter } from './routes/saved-grocery-list.routes';
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -45,6 +47,7 @@ async function startServer() {
     const authService = new AuthService(storageService);
     const recipeService = new RecipeService(storageService);
     const groceryListService = new GroceryListService(recipeService, storageService);
+    const savedGroceryListService = new SavedGroceryListService(storageService);
 
     // Initialize auth middleware
     const authMiddleware = createAuthMiddleware(authService);
@@ -53,6 +56,7 @@ async function startServer() {
     app.use('/api/auth', createAuthRouter(authService, authMiddleware));
     app.use('/api/recipes', authMiddleware, createRecipeRouter(recipeService));
     app.use('/api/grocery-list', authMiddleware, createGroceryListRouter(groceryListService));
+    app.use('/api/saved-lists', createSavedGroceryListRouter(savedGroceryListService, authMiddleware));
 
     // Health check endpoint
     app.get('/health', (req, res) => {
@@ -66,9 +70,9 @@ async function startServer() {
 
     app.use(express.static(frontendPath));
 
-    // Serve index.html for all other routes (SPA support)
-    // Use middleware instead of route to avoid path-to-regexp issues
-    app.use((req, res) => {
+    // Serve index.html for all non-API routes (SPA support)
+    // Only serve SPA for routes that don't start with /api or /health
+    app.get(/^\/(?!api|health).*/, (req, res) => {
       const indexPath = path.join(frontendPath, 'index.html');
       if (require('fs').existsSync(indexPath)) {
         res.sendFile(indexPath);

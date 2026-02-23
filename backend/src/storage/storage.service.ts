@@ -3,6 +3,7 @@ import * as path from 'path';
 import { User } from '../models/user.model';
 import { Session } from '../models/session.model';
 import { Recipe } from '../models/recipe.model';
+import { SavedGroceryList } from '../models/saved-grocery-list.model';
 
 export interface RecipeWithUser extends Recipe {
   userId: string;
@@ -13,6 +14,7 @@ export interface StorageData {
   users: Record<string, User>;
   sessions: Record<string, Session>;
   commonCategories: Record<string, string>;
+  savedGroceryLists: Record<string, Record<string, SavedGroceryList>>;
 }
 
 export class StorageService {
@@ -44,6 +46,7 @@ export class StorageService {
           users: {},
           sessions: {},
           commonCategories: {},
+          savedGroceryLists: {},
         };
         fs.writeFileSync(this.storagePath, JSON.stringify(initialData, null, 2), 'utf-8');
       }
@@ -79,6 +82,15 @@ export class StorageService {
 
       if (!parsed.commonCategories || typeof parsed.commonCategories !== 'object') {
         throw new Error('Invalid storage format: commonCategories must be an object');
+      }
+
+      // Initialize savedGroceryLists if it doesn't exist (for backward compatibility)
+      if (!parsed.savedGroceryLists) {
+        parsed.savedGroceryLists = {};
+      }
+
+      if (typeof parsed.savedGroceryLists !== 'object') {
+        throw new Error('Invalid storage format: savedGroceryLists must be an object');
       }
       
       return parsed as StorageData;
@@ -119,6 +131,10 @@ export class StorageService {
 
       if (!data.commonCategories || typeof data.commonCategories !== 'object') {
         throw new Error('Invalid data: commonCategories must be an object');
+      }
+
+      if (!data.savedGroceryLists || typeof data.savedGroceryLists !== 'object') {
+        throw new Error('Invalid data: savedGroceryLists must be an object');
       }
 
       // Create backup of current file if it exists
@@ -334,5 +350,52 @@ export class StorageService {
     const data = this.read();
     data.commonCategories[ingredient] = category;
     this.write(data);
+  }
+
+  // Saved grocery list operations
+
+  /**
+   * Get saved grocery list by ID
+   */
+  getSavedGroceryList(userId: string, listId: string): SavedGroceryList | null {
+    const data = this.read();
+    if (!data.savedGroceryLists[userId]) {
+      return null;
+    }
+    return data.savedGroceryLists[userId][listId] || null;
+  }
+
+  /**
+   * List all saved grocery lists for a user
+   */
+  listSavedGroceryLists(userId: string): SavedGroceryList[] {
+    const data = this.read();
+    if (!data.savedGroceryLists[userId]) {
+      return [];
+    }
+    return Object.values(data.savedGroceryLists[userId]);
+  }
+
+  /**
+   * Create or update saved grocery list
+   */
+  setSavedGroceryList(userId: string, list: SavedGroceryList): void {
+    const data = this.read();
+    if (!data.savedGroceryLists[userId]) {
+      data.savedGroceryLists[userId] = {};
+    }
+    data.savedGroceryLists[userId][list.id] = list;
+    this.write(data);
+  }
+
+  /**
+   * Delete saved grocery list
+   */
+  deleteSavedGroceryList(userId: string, listId: string): void {
+    const data = this.read();
+    if (data.savedGroceryLists[userId] && data.savedGroceryLists[userId][listId]) {
+      delete data.savedGroceryLists[userId][listId];
+      this.write(data);
+    }
   }
 }

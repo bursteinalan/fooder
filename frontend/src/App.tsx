@@ -4,12 +4,14 @@ import { RecipeDetail } from './components/RecipeDetail';
 import { RecipeForm } from './components/RecipeForm';
 import { GroceryList } from './components/GroceryList';
 import { CategorizationManager } from './components/CategorizationManager';
+import { SavedGroceryLists } from './components/SavedGroceryLists';
+import { ShoppingView } from './components/ShoppingView';
 import { useAuth } from './contexts/AuthContext';
 import { apiService } from './services/api.service';
 import type { Recipe } from './types/recipe.types';
 import './App.css';
 
-type View = 'list' | 'add' | 'edit' | 'grocery' | 'categorize';
+type View = 'list' | 'add' | 'edit' | 'grocery' | 'categorize' | 'saved-lists' | 'shopping';
 
 // Error Boundary Component
 interface ErrorBoundaryProps {
@@ -59,6 +61,7 @@ function App() {
   const [selectedRecipeDetail, setSelectedRecipeDetail] = useState<Recipe | null>(null);
   const [recipeToEdit, setRecipeToEdit] = useState<Recipe | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [shoppingListId, setShoppingListId] = useState<string | null>(null);
 
   const handleRecipeSelect = (recipeId: string) => {
     setSelectedRecipes(prev => {
@@ -113,6 +116,16 @@ function App() {
     setCurrentView(view);
   };
 
+  const handleNavigateToShopping = (listId: string) => {
+    setShoppingListId(listId);
+    setCurrentView('shopping');
+  };
+
+  const handleBackToSavedLists = () => {
+    setShoppingListId(null);
+    setCurrentView('saved-lists');
+  };
+
   return (
     <ErrorBoundary>
       <div className="app">
@@ -143,6 +156,12 @@ function App() {
               className={`nav-button ${currentView === 'categorize' ? 'active' : ''}`}
             >
               Categorize
+            </button>
+            <button
+              onClick={() => navigateToView('saved-lists')}
+              className={`nav-button ${currentView === 'saved-lists' || currentView === 'shopping' ? 'active' : ''}`}
+            >
+              Saved Lists
             </button>
             <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <span style={{ color: '#666', fontSize: '0.9rem' }}>{user?.username}</span>
@@ -184,6 +203,14 @@ function App() {
 
           {currentView === 'categorize' && (
             <CategorizationManager />
+          )}
+
+          {currentView === 'saved-lists' && (
+            <SavedGroceryLists onNavigateToShopping={handleNavigateToShopping} />
+          )}
+
+          {currentView === 'shopping' && shoppingListId && (
+            <ShoppingView listId={shoppingListId} onBack={handleBackToSavedLists} />
           )}
         </main>
 

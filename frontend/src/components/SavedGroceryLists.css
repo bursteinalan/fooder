@@ -1,0 +1,222 @@
+.saved-lists-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.saved-lists-header {
+  margin-bottom: 30px;
+}
+
+.saved-lists-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 28px;
+}
+
+.loading,
+.error-message,
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 18px;
+}
+
+.error-message {
+  color: #d32f2f;
+}
+
+.btn-retry {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.btn-retry:hover {
+  background-color: #535bf2;
+}
+
+.lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.list-card {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.list-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.list-card-content {
+  padding: 20px;
+  cursor: pointer;
+}
+
+.list-card-content:focus {
+  outline: 2px solid #646cff;
+  outline-offset: -2px;
+}
+
+.list-name {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+.list-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.list-date {
+  flex-shrink: 0;
+}
+
+.list-item-count {
+  font-weight: 500;
+  color: #646cff;
+}
+
+.list-card-actions {
+  padding: 12px 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-delete {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+.delete-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.delete-confirm-text {
+  font-size: 14px;
+  color: #333;
+  margin-right: auto;
+}
+
+.btn-confirm-delete,
+.btn-cancel-delete {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.btn-confirm-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-confirm-delete:hover {
+  background-color: #c82333;
+}
+
+.btn-cancel-delete {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-cancel-delete:hover {
+  background-color: #5a6268;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .saved-lists-container {
+    padding: 16px;
+  }
+
+  .saved-lists-header h2 {
+    font-size: 24px;
+  }
+
+  .lists-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .list-card-content {
+    padding: 16px;
+  }
+
+  .list-name {
+    font-size: 18px;
+  }
+
+  .list-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .delete-confirm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .delete-confirm-text {
+    margin-bottom: 8px;
+  }
+
+  .btn-confirm-delete,
+  .btn-cancel-delete {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .saved-lists-container {
+    padding: 12px;
+  }
+
+  .saved-lists-header {
+    margin-bottom: 20px;
+  }
+
+  .list-card {
+    border-radius: 8px;
+  }
+}

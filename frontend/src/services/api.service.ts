@@ -10,6 +10,9 @@ import type {
   CurrentUser,
   Ingredient,
 } from '../types/recipe.types';
+import type {
+  SavedGroceryList,
+} from '../types/saved-grocery-list.types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -238,6 +241,104 @@ class ApiService {
    */
   async getIngredientCategory(ingredientName: string): Promise<{ ingredientName: string; category: string }> {
     return this.fetchWithErrorHandling(`/api/grocery-list/category/${encodeURIComponent(ingredientName)}`);
+  }
+
+  // ============================================
+  // Saved Grocery List Methods
+  // ============================================
+
+  /**
+   * POST /api/saved-lists - Create a new saved grocery list
+   */
+  async createSavedList(data: {
+    name: string;
+    items: Array<{
+      name: string;
+      quantity: number;
+      unit: string;
+      category: string;
+    }>;
+    recipeIds: string[];
+  }): Promise<SavedGroceryList> {
+    return this.fetchWithErrorHandling<SavedGroceryList>('/api/saved-lists', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * GET /api/saved-lists - Get all saved grocery lists
+   */
+  async getSavedLists(): Promise<SavedGroceryList[]> {
+    return this.fetchWithErrorHandling<SavedGroceryList[]>('/api/saved-lists');
+  }
+
+  /**
+   * GET /api/saved-lists/:id - Get a specific saved grocery list
+   */
+  async getSavedListById(id: string): Promise<SavedGroceryList> {
+    return this.fetchWithErrorHandling<SavedGroceryList>(`/api/saved-lists/${id}`);
+  }
+
+  /**
+   * PUT /api/saved-lists/:id - Update a saved grocery list (rename)
+   */
+  async updateSavedList(id: string, data: { name: string }): Promise<SavedGroceryList> {
+    return this.fetchWithErrorHandling<SavedGroceryList>(`/api/saved-lists/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * DELETE /api/saved-lists/:id - Delete a saved grocery list
+   */
+  async deleteSavedList(id: string): Promise<void> {
+    return this.fetchWithErrorHandling<void>(`/api/saved-lists/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  /**
+   * PATCH /api/saved-lists/:id/items/:itemId/check - Toggle item checked state
+   */
+  async toggleItemChecked(listId: string, itemId: string): Promise<SavedGroceryList> {
+    return this.fetchWithErrorHandling<SavedGroceryList>(
+      `/api/saved-lists/${listId}/items/${itemId}/check`,
+      {
+        method: 'PATCH',
+      }
+    );
+  }
+
+  /**
+   * POST /api/saved-lists/:id/items - Add item to saved grocery list
+   */
+  async addItemToList(
+    listId: string,
+    item: {
+      name: string;
+      quantity: number;
+      unit: string;
+      category: string;
+    }
+  ): Promise<SavedGroceryList> {
+    return this.fetchWithErrorHandling<SavedGroceryList>(`/api/saved-lists/${listId}/items`, {
+      method: 'POST',
+      body: JSON.stringify(item),
+    });
+  }
+
+  /**
+   * DELETE /api/saved-lists/:id/items/:itemId - Remove item from saved grocery list
+   */
+  async removeItemFromList(listId: string, itemId: string): Promise<SavedGroceryList> {
+    return this.fetchWithErrorHandling<SavedGroceryList>(
+      `/api/saved-lists/${listId}/items/${itemId}`,
+      {
+        method: 'DELETE',
+      }
+    );
   }
 }
 

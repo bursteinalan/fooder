@@ -230,6 +230,7 @@ export class MigrationService {
       sessions: {},
       recipes: migratedRecipes,
       commonCategories: INGREDIENT_CATEGORIES,
+      savedGroceryLists: {},
     };
 
     // Write the new structure

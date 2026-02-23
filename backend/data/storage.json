@@ -144,6 +144,18 @@
       "userId": "7ec368b3-7d78-470f-b580-0338bce008ba",
       "createdAt": "2026-02-23T00:39:00.944Z",
       "expiresAt": "2027-02-23T00:39:00.944Z"
+    },
+    "b2eaf413-7e71-454b-abc8-cff2c4e2deea": {
+      "token": "b2eaf413-7e71-454b-abc8-cff2c4e2deea",
+      "userId": "921ecc6f-0013-4e95-83e6-b45699e4f357",
+      "createdAt": "2026-02-23T01:53:40.419Z",
+      "expiresAt": "2027-02-23T01:53:40.419Z"
+    },
+    "c3e22ab6-7d4c-48e8-a7b5-6c6b2962391d": {
+      "token": "c3e22ab6-7d4c-48e8-a7b5-6c6b2962391d",
+      "userId": "921ecc6f-0013-4e95-83e6-b45699e4f357",
+      "createdAt": "2026-02-23T02:03:18.909Z",
+      "expiresAt": "2027-02-23T02:03:18.909Z"
     }
   },
   "recipes": {
@@ -590,5 +602,175 @@
     "vegetable broth": "Canned & Jarred",
     "stock": "Canned & Jarred",
     "broth": "Canned & Jarred"
+  },
+  "savedGroceryLists": {
+    "921ecc6f-0013-4e95-83e6-b45699e4f357": {
+      "66efec18d988b2959d050833cc80ad85": {
+        "id": "66efec18d988b2959d050833cc80ad85",
+        "userId": "921ecc6f-0013-4e95-83e6-b45699e4f357",
+        "name": "test",
+        "items": [
+          {
+            "id": "221a62ff13aad9ebd262305d4249b9eb",
+            "name": "coconut milk",
+            "quantity": 13,
+            "unit": "oz",
+            "category": "Canned & Jarred",
+            "checked": false,
+            "order": 0
+          },
+          {
+            "id": "0e9e67b84266a4b2dac0dab523f72f80",
+            "name": "beef shank",
+            "quantity": 2,
+            "unit": "lb",
+            "category": "Meat & Seafood",
+            "checked": false,
+            "order": 1
+          },
+          {
+            "id": "1418135ef200a527553ef401f4ee48ce",
+            "name": "chicken breast",
+            "quantity": 1,
+            "unit": "whole",
+            "category": "Meat & Seafood",
+            "checked": false,
+            "order": 2
+          },
+          {
+            "id": "c52914445db2cf72f677f88b51d24155",
+            "name": "coconut soda, coke, or sprite",
+            "quantity": 6,
+            "unit": "oz",
+            "category": "Other",
+            "checked": false,
+            "order": 3
+          },
+          {
+            "id": "f928403e52d606cbaa0383e358823419",
+            "name": "jalapenos",
+            "quantity": 2,
+            "unit": "whole",
+            "category": "Other",
+            "checked": false,
+            "order": 4
+          },
+          {
+            "id": "3cfa3fcccb59030bcdd407d9d9cad515",
+            "name": "star anise",
+            "quantity": 4,
+            "unit": "piece",
+            "category": "Other",
+            "checked": false,
+            "order": 5
+          },
+          {
+            "id": "9d2d6da287941387574b4462d00cd88e",
+            "name": "12\" vietnamese bread loaves",
+            "quantity": 6,
+            "unit": "piece",
+            "category": "Pantry & Dry Goods",
+            "checked": false,
+            "order": 6
+          },
+          {
+            "id": "55ce2a91c0228d8ccbbc816f8ed88fb4",
+            "name": "carrots",
+            "quantity": 0.5,
+            "unit": "lb",
+            "category": "Produce",
+            "checked": false,
+            "order": 7
+          },
+          {
+            "id": "d02c29c9484a75a4aec214c850dc1362",
+            "name": "carrots",
+            "quantity": 3,
+            "unit": "piece",
+            "category": "Produce",
+            "checked": false,
+            "order": 8
+          },
+          {
+            "id": "027840bcf51d47ea77d08e2c8a7e8ef6",
+            "name": "fresh ginger",
+            "quantity": 1.5,
+            "unit": "tbsp",
+            "category": "Produce",
+            "checked": false,
+            "order": 9
+          },
+          {
+            "id": "4e93102e764fc360509a0160590b93c5",
+            "name": "garlic",
+            "quantity": 6,
+            "unit": "clove",
+            "category": "Produce",
+            "checked": false,
+            "order": 10
+          },
+          {
+            "id": "3bf2d039e2322cbf1f47e9c1a24e9d1a",
+            "name": "grated fresh ginger",
+            "quantity": 0.5,
+            "unit": "tbsp",
+            "category": "Produce",
+            "checked": false,
+            "order": 11
+          },
+          {
+            "id": "a3fd75f185031c2d3d554837fdff8626",
+            "name": "lemon",
+            "quantity": 1,
+            "unit": "whole",
+            "category": "Produce",
+            "checked": false,
+            "order": 12
+          },
+          {
+            "id": "f0bce1bc0294fc62b209cf9676bbbc39",
+            "name": "lime",
+            "quantity": 2,
+            "unit": "whole",
+            "category": "Produce",
+            "checked": false,
+            "order": 13
+          },
+          {
+            "id": "18f9618f8c47e4c2b3202910438dfc47",
+            "name": "onion",
+            "quantity": 2,
+            "unit": "whole",
+            "category": "Produce",
+            "checked": false,
+            "order": 14
+          },
+          {
+            "id": "bce184a42638d39a484fcb3c827874f2",
+            "name": "thai basil",
+            "quantity": 1,
+            "unit": "bunch",
+            "category": "Produce",
+            "checked": false,
+            "order": 15
+          },
+          {
+            "id": "eb7ce7a1fc5efb90bbaca32ea4ff6750",
+            "name": "bay leaves",
+            "quantity": 5,
+            "unit": "piece",
+            "category": "Spices & Seasonings",
+            "checked": false,
+            "order": 16
+          }
+        ],
+        "recipeIds": [
+          "4a5b303c-aaa8-4db5-b3f4-39d837676a9e",
+          "b3802729-6f78-49e6-a45e-0d95b6c6c333"
+        ],
+        "createdAt": "2026-02-23T02:03:34.660Z",
+        "updatedAt": "2026-02-23T02:05:41.968Z"
+      }
+    }
   }
 }

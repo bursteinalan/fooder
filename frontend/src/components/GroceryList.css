@@ -195,7 +195,8 @@
 }
 
 .btn-copy,
-.btn-download {
+.btn-download,
+.btn-save {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 500;
@@ -221,6 +222,15 @@
 
 .btn-download:hover {
   background-color: #059669;
+}
+
+.btn-save {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #d97706;
 }
 
 .empty-state {
@@ -302,7 +312,8 @@
   }
 
   .btn-copy,
-  .btn-download {
+  .btn-download,
+  .btn-save {
     width: 100%;
   }
 }
@@ -340,4 +351,121 @@
   border-radius: 16px;
   font-size: 0.875rem;
   font-weight: 500;
+}
+
+/* Save Dialog Styles */
+.save-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.save-dialog {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.save-dialog h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.dialog-description {
+  margin: 0 0 1.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.dialog-error {
+  background-color: #fee;
+  color: #c33;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.dialog-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.dialog-input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.btn-dialog-cancel,
+.btn-dialog-save {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-dialog-cancel {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.btn-dialog-cancel:hover {
+  background-color: #d1d5db;
+}
+
+.btn-dialog-save {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.btn-dialog-save:hover:not(:disabled) {
+  background-color: #d97706;
+}
+
+.btn-dialog-save:disabled {
+  background-color: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .save-dialog {
+    padding: 1.5rem;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-dialog-cancel,
+  .btn-dialog-save {
+    width: 100%;
+  }
 }

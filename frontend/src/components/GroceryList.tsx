@@ -17,6 +17,11 @@ export function GroceryList({ selectedRecipes }: GroceryListProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [listName, setListName] = useState('');
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const STANDARD_UNITS = [
     'tsp', 'tbsp', 'cup', 'pint', 'oz', 'lb', 'g', 'kg', 'ml', 'l',
@@ -154,6 +159,65 @@ export function GroceryList({ selectedRecipes }: GroceryListProps) {
     URL.revokeObjectURL(url);
   };
 
+  const handleOpenSaveDialog = () => {
+    setShowSaveDialog(true);
+    setListName('');
+    setSaveError(null);
+  };
+
+  const handleCloseSaveDialog = () => {
+    setShowSaveDialog(false);
+    setListName('');
+    setSaveError(null);
+  };
+
+  const handleSaveList = async () => {
+    const trimmedName = listName.trim();
+    
+    if (!trimmedName) {
+      setSaveError('Please enter a list name');
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveError(null);
+
+    try {
+      // Collect all valid custom items
+      const validCustomItems = customItems.filter(
+        item => item.name.trim() && item.quantity > 0 && item.unit.trim()
+      );
+
+      // Combine grocery items and custom items
+      const allItems = [...groceryItems, ...validCustomItems].map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
+        category: item.category,
+      }));
+
+      // Call API to create saved list
+      await apiService.createSavedList({
+        name: trimmedName,
+        items: allItems,
+        recipeIds: selectedRecipes,
+      });
+
+      // Show success message
+      setSaveSuccess(true);
+      setShowSaveDialog(false);
+      setListName('');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save list';
+      setSaveError(errorMessage);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (selectedRecipes.length === 0) {
     return (
       <div className="grocery-list-container">
@@ -244,11 +308,24 @@ export function GroceryList({ selectedRecipes }: GroceryListProps) {
                 >
                   Download as Text
                 </button>
+                <button
+                  onClick={handleOpenSaveDialog}
+                  className="btn-save"
+                  aria-label="Save grocery list"
+                >
+                  Save List
+                </button>
               </div>
 
               {copySuccess && (
                 <div className="success-message">
                   Grocery list copied to clipboard!
+                </div>
+              )}
+
+              {saveSuccess && (
+                <div className="success-message">
+                  List saved successfully!
                 </div>
               )}
             </>
@@ -322,6 +399,50 @@ export function GroceryList({ selectedRecipes }: GroceryListProps) {
           </button>
         </div>
       </div>
+
+      {showSaveDialog && (
+        <div className="save-dialog-overlay" onClick={handleCloseSaveDialog}>
+          <div className="save-dialog" onClick={(e) => e.stopPropagation()}>
+            <h3>Save Grocery List</h3>
+            <p className="dialog-description">Give your list a name to save it for later</p>
+            
+            {saveError && (
+              <div className="dialog-error">{saveError}</div>
+            )}
+            
+            <input
+              type="text"
+              placeholder="Enter list name (e.g., Weekly Shopping)"
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && listName.trim() && !isSaving) {
+                  handleSaveList();
+                }
+              }}
+              className="dialog-input"
+              autoFocus
+              maxLength={100}
+            />
+            
+            <div className="dialog-actions">
+              <button
+                onClick={handleCloseSaveDialog}
+                className="btn-dialog-cancel"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveList}
+                className="btn-dialog-save"
+                disabled={!listName.trim() || isSaving}
+              >
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
