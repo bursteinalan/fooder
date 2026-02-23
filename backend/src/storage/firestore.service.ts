@@ -9,9 +9,9 @@ export class FirestoreService {
 
   constructor() {
     this.db = new Firestore({
-      projectId: process.env.GCP_PROJECT_ID,
-      // In production (Cloud Run), credentials are automatic
-      // For local dev, set GOOGLE_APPLICATION_CREDENTIALS env var
+      // In Cloud Run, projectId and credentials are automatic
+      // For local dev, set GCP_PROJECT_ID and GOOGLE_APPLICATION_CREDENTIALS
+      ...(process.env.GCP_PROJECT_ID && { projectId: process.env.GCP_PROJECT_ID }),
     });
   }
 
@@ -29,7 +29,7 @@ export class FirestoreService {
 
   set(id: string, recipe: RecipeWithUser): void {
     // Fire and forget for sync compatibility
-    this.db.collection('recipes').doc(id).set(recipe).catch(err => 
+    this.db.collection('recipes').doc(id).set(recipe).catch(err =>
       console.error('Error setting recipe:', err)
     );
   }
@@ -92,7 +92,7 @@ export class FirestoreService {
       .where('username', '==', username)
       .limit(1)
       .get();
-    
+
     if (snapshot.empty) return null;
     const doc = snapshot.docs[0];
     return { id: doc.id, ...doc.data() } as User;
@@ -174,7 +174,7 @@ export class FirestoreService {
     const snapshot = await this.db.collection('sessions')
       .where('userId', '==', userId)
       .get();
-    
+
     const sessions: Session[] = [];
     snapshot.forEach(doc => {
       sessions.push({ token: doc.id, ...doc.data() } as Session);
@@ -190,12 +190,12 @@ export class FirestoreService {
     const snapshot = await this.db.collection('sessions')
       .where('userId', '==', userId)
       .get();
-    
+
     const batch = this.db.batch();
     snapshot.docs.forEach(doc => {
       batch.delete(doc.ref);
     });
-    
+
     await batch.commit();
     return snapshot.size;
   }
