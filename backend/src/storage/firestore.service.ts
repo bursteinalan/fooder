@@ -10,6 +10,8 @@ export class FirestoreService {
   constructor() {
     this.db = new Firestore({
       // In Cloud Run, projectId and credentials are automatic
+      // Specify the database ID since it's not the default "(default)"
+      databaseId: process.env.FIRESTORE_DATABASE_ID || 'fooder-db',
       // For local dev, set GCP_PROJECT_ID and GOOGLE_APPLICATION_CREDENTIALS
       ...(process.env.GCP_PROJECT_ID && { projectId: process.env.GCP_PROJECT_ID }),
     });

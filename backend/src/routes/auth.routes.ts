@@ -48,6 +48,9 @@ export function createAuthRouter(authService: AuthService, authMiddleware: any):
       
       res.status(201).json(authResponse);
     } catch (error) {
+      // Log the error for debugging
+      console.error('Signup error:', error);
+      
       // Check if it's a username conflict error (Requirement 1.3)
       if (error instanceof Error && error.message === 'Username already exists') {
         res.status(409).json({ 
