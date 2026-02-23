@@ -14,6 +14,8 @@ export class FirestoreService {
       databaseId: process.env.FIRESTORE_DATABASE_ID || 'fooder-db',
       // For local dev, set GCP_PROJECT_ID and GOOGLE_APPLICATION_CREDENTIALS
       ...(process.env.GCP_PROJECT_ID && { projectId: process.env.GCP_PROJECT_ID }),
+      // Ignore undefined values (e.g., optional fields like sourceUrl)
+      ignoreUndefinedProperties: true,
     });
   }
 

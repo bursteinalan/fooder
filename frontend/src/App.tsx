@@ -4,6 +4,7 @@ import { RecipeDetail } from './components/RecipeDetail';
 import { RecipeForm } from './components/RecipeForm';
 import { GroceryList } from './components/GroceryList';
 import { CategorizationManager } from './components/CategorizationManager';
+import { useAuth } from './contexts/AuthContext';
 import { apiService } from './services/api.service';
 import type { Recipe } from './types/recipe.types';
 import './App.css';
@@ -52,6 +53,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 function App() {
+  const { user, logout } = useAuth();
   const [currentView, setCurrentView] = useState<View>('list');
   const [selectedRecipes, setSelectedRecipes] = useState<string[]>([]);
   const [selectedRecipeDetail, setSelectedRecipeDetail] = useState<Recipe | null>(null);
@@ -142,6 +144,12 @@ function App() {
             >
               Categorize
             </button>
+            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{ color: '#666', fontSize: '0.9rem' }}>{user?.username}</span>
+              <button onClick={logout} className="nav-button" style={{ background: '#dc3545' }}>
+                Logout
+              </button>
+            </div>
           </nav>
         </header>
 
