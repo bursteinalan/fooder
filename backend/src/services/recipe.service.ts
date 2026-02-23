@@ -112,6 +112,20 @@ export class RecipeService {
     const recipes = await this.list(userId);
     const ingredientNames = new Set<string>();
 
+    // Add common ingredients as defaults for new users
+    const commonIngredients = [
+      'salt', 'pepper', 'olive oil', 'butter', 'garlic', 'onion',
+      'flour', 'sugar', 'eggs', 'milk', 'chicken', 'beef',
+      'tomato', 'potato', 'carrot', 'celery', 'rice', 'pasta',
+      'cheese', 'cream', 'lemon', 'basil', 'oregano', 'thyme',
+      'chicken broth', 'vegetable broth', 'soy sauce', 'vinegar',
+      'honey', 'ginger', 'cumin', 'paprika', 'cinnamon', 'vanilla extract'
+    ];
+
+    // Add common ingredients first
+    commonIngredients.forEach(name => ingredientNames.add(name));
+
+    // Add user's existing ingredients
     recipes.forEach(recipe => {
       recipe.ingredients.forEach(ingredient => {
         if (ingredient.name.trim()) {
